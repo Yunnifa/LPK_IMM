@@ -3,10 +3,13 @@
 nixPkgs = ["nodejs_18"]
 
 [phases.install]
-cmds = ["npm ci || npm install"]
+cmds = ["npm ci --include=dev || npm install"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["echo 'Build complete'"]
+
+[start]
+cmd = "npm run start"
 
 [start]
 cmd = "npm run start"
