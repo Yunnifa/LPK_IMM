@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "start": "npx drizzle-kit push && tsx src/index.ts",
+    "start": "tsx src/db/pushSchema.ts && tsx src/index.ts",
     "build": "npm install",
     "db:push": "npx drizzle-kit push",
     "db:studio": "drizzle-kit studio",
