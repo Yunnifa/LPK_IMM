@@ -44,51 +44,6 @@ export const vehicles = pgTable('vehicles', {
   updatedAt: timestamp('updated_at').defaultNow(),
 });
 
-// Rentals Table
-export const rentals = pgTable('rentals', {
-  id: serial('id').primaryKey(),
-  userId: integer('user_id').notNull().references(() => users.id),
-  vehicleId: integer('vehicle_id').notNull().references(() => vehicles.id),
-  startDate: date('start_date').notNull(),
-  endDate: date('end_date').notNull(),
-  totalDays: integer('total_days').notNull(),
-  totalAmount: decimal('total_amount', { precision: 10, scale: 2 }).notNull(),
-  status: varchar('status', { length: 20 }).notNull().default('pending'), // pending, approved, active, completed, cancelled
-  purpose: text('purpose'),
-  notes: text('notes'),
-  approvedBy: integer('approved_by').references(() => users.id),
-  approvedAt: timestamp('approved_at'),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
-});
-
-// Payments Table
-export const payments = pgTable('payments', {
-  id: serial('id').primaryKey(),
-  rentalId: integer('rental_id').notNull().references(() => rentals.id),
-  amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
-  paymentMethod: varchar('payment_method', { length: 50 }).notNull(), // cash, transfer, credit_card
-  paymentStatus: varchar('payment_status', { length: 20 }).notNull().default('pending'), // pending, paid, failed
-  paymentDate: timestamp('payment_date'),
-  transactionId: varchar('transaction_id', { length: 100 }),
-  notes: text('notes'),
-  createdAt: timestamp('created_at').defaultNow(),
-});
-
-// Maintenance Table
-export const maintenance = pgTable('maintenance', {
-  id: serial('id').primaryKey(),
-  vehicleId: integer('vehicle_id').notNull().references(() => vehicles.id),
-  description: text('description').notNull(),
-  cost: decimal('cost', { precision: 10, scale: 2 }),
-  maintenanceDate: date('maintenance_date').notNull(),
-  completedDate: date('completed_date'),
-  status: varchar('status', { length: 20 }).notNull().default('scheduled'), // scheduled, in_progress, completed
-  performedBy: varchar('performed_by', { length: 100 }),
-  notes: text('notes'),
-  createdAt: timestamp('created_at').defaultNow(),
-});
-
 // Vehicle Requests Table
 export const vehicleRequests = pgTable('vehicle_requests', {
   id: serial('id').primaryKey(),
@@ -209,43 +164,11 @@ export const formResponses = pgTable('form_responses', {
 // RELATIONS
 // ========================
 export const usersRelations = relations(users, ({ many }) => ({
-  rentals: many(rentals),
-  approvedRentals: many(rentals),
+  vehicleRequests: many(vehicleRequests),
 }));
 
 export const vehiclesRelations = relations(vehicles, ({ many }) => ({
-  rentals: many(rentals),
-  maintenanceRecords: many(maintenance),
-}));
-
-export const rentalsRelations = relations(rentals, ({ one, many }) => ({
-  user: one(users, {
-    fields: [rentals.userId],
-    references: [users.id],
-  }),
-  vehicle: one(vehicles, {
-    fields: [rentals.vehicleId],
-    references: [vehicles.id],
-  }),
-  approver: one(users, {
-    fields: [rentals.approvedBy],
-    references: [users.id],
-  }),
-  payments: many(payments),
-}));
-
-export const paymentsRelations = relations(payments, ({ one }) => ({
-  rental: one(rentals, {
-    fields: [payments.rentalId],
-    references: [rentals.id],
-  }),
-}));
-
-export const maintenanceRelations = relations(maintenance, ({ one }) => ({
-  vehicle: one(vehicles, {
-    fields: [maintenance.vehicleId],
-    references: [vehicles.id],
-  }),
+  // Future: vehicle assignments
 }));
 
 export const departmentsRelations = relations(departments, ({ many }) => ({

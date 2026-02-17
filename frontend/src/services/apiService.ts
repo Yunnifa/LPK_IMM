@@ -9,8 +9,6 @@ import type {
   Vehicle,
   CreateVehicleParams,
   UpdateVehicleParams,
-  Rental,
-  CreateRentalParams,
   VehicleRequest,
   CreateVehicleRequestParams,
   UpdateApprovalParams,
@@ -64,34 +62,6 @@ export const updateVehicle = async (id: number, vehicleData: UpdateVehicleParams
 
 export const deleteVehicle = async (id: number): Promise<{ message: string }> => {
   const response = await api.delete(`/vehicles/${id}`);
-  return response.data;
-};
-
-// ========================
-// Rentals
-// ========================
-export const getRentals = async (): Promise<Rental[]> => {
-  const response = await api.get('/rentals');
-  return response.data;
-};
-
-export const getRental = async (id: number): Promise<Rental> => {
-  const response = await api.get(`/rentals/${id}`);
-  return response.data;
-};
-
-export const createRental = async (rentalData: CreateRentalParams): Promise<Rental> => {
-  const response = await api.post('/rentals', rentalData);
-  return response.data;
-};
-
-export const updateRentalStatus = async (id: number, status: string): Promise<Rental> => {
-  const response = await api.patch(`/rentals/${id}/status`, { status });
-  return response.data;
-};
-
-export const cancelRental = async (id: number): Promise<Rental> => {
-  const response = await api.patch(`/rentals/${id}/cancel`);
   return response.data;
 };
 
@@ -279,8 +249,6 @@ export type {
   Vehicle,
   CreateVehicleParams,
   UpdateVehicleParams,
-  Rental,
-  CreateRentalParams,
   VehicleRequest,
   CreateVehicleRequestParams,
   UpdateApprovalParams,

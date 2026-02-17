@@ -114,31 +114,6 @@ export interface UpdateVehicleParams {
 }
 
 // ========================
-// Rental
-// ========================
-export interface Rental {
-  id: number;
-  userId: number;
-  vehicleId: number;
-  startDate: string;
-  endDate: string;
-  totalDays: number;
-  totalAmount: string;
-  status: string;
-  purpose?: string | null;
-  notes?: string | null;
-  approvedBy?: number | null;
-  approvedAt?: string | null;
-  createdAt?: string;
-}
-
-export interface CreateRentalParams {
-  vehicleId: number;
-  startDate: string;
-  endDate: string;
-}
-
-// ========================
 // Vehicle Request
 // ========================
 export interface VehicleRequest {

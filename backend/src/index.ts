@@ -4,7 +4,6 @@ import { cors } from 'hono/cors';
 import { apiLogger } from './middleware/apiLogger';
 import authRoutes from './routes/auth';
 import vehiclesRoutes from './routes/vehicles';
-import rentalsRoutes from './routes/rentals';
 import usersRoutes from './routes/users';
 import departmentsRoutes from './routes/departments';
 import vehicleRequestsRoutes from './routes/vehicleRequests';
@@ -49,7 +48,7 @@ app.use('*', apiLogger);
 // Health check
 app.get('/', (c) => {
   return c.json({ 
-    message: 'Vehicle Rental API', 
+    message: 'LPK IMM Vehicle Request API', 
     status: 'running',
     version: '1.0.0'
   });
@@ -58,7 +57,6 @@ app.get('/', (c) => {
 // Routes
 app.route('/api/auth', authRoutes);
 app.route('/api/vehicles', vehiclesRoutes);
-app.route('/api/rentals', rentalsRoutes);
 app.route('/api/users', usersRoutes);
 app.route('/api/departments', departmentsRoutes);
 app.route('/api/vehicle-requests', vehicleRequestsRoutes);
