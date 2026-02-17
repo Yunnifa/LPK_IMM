@@ -1,14 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getCurrentUser } from '../services/apiService';
-
-interface User {
-  id: number;
-  username: string;
-  fullName: string;
-  email: string;
-  phone: string;
-  role: string;
-}
+import type { User } from '../types';
 
 function UserProfile() {
   const [user, setUser] = useState<User | null>(null);

@@ -1,18 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getVehicleRequests, cancelVehicleRequest } from '../services/apiService';
-
-interface VehicleRequest {
-  id: number;
-  serviceType: string;
-  name: string;
-  departmentName: string;
-  vehiclePurpose: string;
-  locationType: string;
-  startDate: string;
-  endDate: string;
-  status: string;
-  createdAt: string;
-}
+import type { VehicleRequest } from '../types';
 
 function MyRequests() {
   const [requests, setRequests] = useState<VehicleRequest[]>([]);

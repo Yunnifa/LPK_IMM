@@ -1,21 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getVehicles } from '../services/apiService';
-
-interface Vehicle {
-  id: number;
-  licensePlate: string;
-  brand: string;
-  model: string;
-  year: number;
-  color: string;
-  type: string;
-  capacity: number;
-  fuelType: string;
-  transmission: string;
-  status: string;
-  dailyRate: string;
-  description: string;
-}
+import type { Vehicle } from '../types';
 
 function VehicleList() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);

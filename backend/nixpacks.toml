@@ -10,6 +10,3 @@ cmds = ["echo 'Build complete'"]
 
 [start]
 cmd = "npm run start"
-
-[start]
-cmd = "npm run start"

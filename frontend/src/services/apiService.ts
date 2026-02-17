@@ -198,6 +198,11 @@ export const deleteVehicleRequest = async (id: number): Promise<{ message: strin
   return response.data;
 };
 
+export const cancelVehicleRequest = async (id: number): Promise<VehicleRequest> => {
+  const response = await api.patch(`/vehicle-requests/${id}/status`, { status: 'cancelled' });
+  return response.data;
+};
+
 // ========================
 // Form Fields (Kelola Pertanyaan)
 // ========================

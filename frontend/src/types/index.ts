@@ -65,37 +65,52 @@ export interface UpdateUserParams {
 // ========================
 export interface Vehicle {
   id: number;
-  type: string;
+  licensePlate: string;
   brand: string;
   model: string;
-  plateNumber: string;
   year: number;
-  status: 'available' | 'rented' | 'maintenance';
-  dailyRate: number;
+  color?: string | null;
+  type: string;
+  capacity?: number | null;
+  fuelType?: string | null;
+  transmission?: string | null;
+  status: string;
+  dailyRate: string;
   imageUrl?: string | null;
+  description?: string | null;
   createdAt?: string;
 }
 
 export interface CreateVehicleParams {
-  type: string;
+  licensePlate: string;
   brand: string;
   model: string;
-  plateNumber: string;
   year: number;
+  color?: string | null;
+  type: string;
+  capacity?: number | null;
+  fuelType?: string | null;
+  transmission?: string | null;
   status?: string;
   dailyRate: number;
   imageUrl?: string | null;
+  description?: string | null;
 }
 
 export interface UpdateVehicleParams {
-  type?: string;
+  licensePlate?: string;
   brand?: string;
   model?: string;
-  plateNumber?: string;
   year?: number;
+  color?: string | null;
+  type?: string;
+  capacity?: number | null;
+  fuelType?: string | null;
+  transmission?: string | null;
   status?: string;
   dailyRate?: number;
   imageUrl?: string | null;
+  description?: string | null;
 }
 
 // ========================
@@ -107,8 +122,13 @@ export interface Rental {
   vehicleId: number;
   startDate: string;
   endDate: string;
-  totalAmount: number;
-  status: 'pending' | 'active' | 'completed' | 'cancelled';
+  totalDays: number;
+  totalAmount: string;
+  status: string;
+  purpose?: string | null;
+  notes?: string | null;
+  approvedBy?: number | null;
+  approvedAt?: string | null;
   createdAt?: string;
 }
 

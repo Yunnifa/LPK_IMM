@@ -1,40 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getDepartments, createVehicleRequest, getCurrentUser, getFormFields, saveFormResponses } from '../services/apiService';
-
-// Interfaces
-interface Department {
-  id: number;
-  name: string;
-}
-
-interface User {
-  id: number;
-  fullName: string;
-  email: string;
-}
-
-interface FormFieldOption {
-  id: number;
-  value: string;
-  label: string;
-  sortOrder: number;
-}
-
-interface FormField {
-  id: number;
-  fieldKey: string;
-  label: string;
-  fieldType: 'text' | 'date' | 'select' | 'radio' | 'textarea';
-  groupName: string | null;
-  placeholder: string | null;
-  helpText: string | null;
-  sortOrder: number;
-  isRequired: boolean;
-  isActive: boolean;
-  isSystemField: boolean;
-  options: FormFieldOption[];
-}
+import type { Department, User, FormField } from '../types';
 
 function VehicleRequestForm() {
   const navigate = useNavigate();

@@ -1,19 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getRentals } from '../services/apiService';
-
-interface Rental {
-  id: number;
-  userId: number;
-  vehicleId: number;
-  startDate: string;
-  endDate: string;
-  totalDays: number;
-  totalAmount: string;
-  status: string;
-  purpose: string;
-  notes: string;
-  createdAt: string;
-}
+import type { Rental } from '../types';
 
 function RentalList() {
   const [rentals, setRentals] = useState<Rental[]>([]);
