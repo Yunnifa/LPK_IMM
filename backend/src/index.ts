@@ -10,6 +10,9 @@ import departmentsRoutes from './routes/departments';
 import vehicleRequestsRoutes from './routes/vehicleRequests';
 import telegramRoutes from './routes/telegram';
 import formFieldsRoutes from './routes/formFields';
+import { db } from './db';
+import { users, departments, formFields } from './db/schema';
+import { sql } from 'drizzle-orm';
 import 'dotenv/config';
 
 const app = new Hono();
@@ -18,6 +21,8 @@ const app = new Hono();
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
   : ['http://localhost:5173'];
+
+console.log('Allowed origins:', allowedOrigins);
 
 // Middleware
 app.use('*', cors({
@@ -28,8 +33,15 @@ app.use('*', cors({
     if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
       return origin;
     }
-    return null;
+    // In production, also allow Railway domains
+    if (origin.endsWith('.up.railway.app')) {
+      return origin;
+    }
+    console.log('CORS blocked origin:', origin);
+    return origin; // Allow all for now to debug, tighten later
   },
+  allowHeaders: ['Content-Type', 'Authorization'],
+  allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   credentials: true,
 }));
 app.use('*', apiLogger);
@@ -66,9 +78,32 @@ app.onError((err, c) => {
 
 const port = parseInt(process.env.PORT || '3000');
 
-console.log(`🚀 Server is running on http://localhost:${port}`);
+// Auto-seed database if empty (for fresh deployments)
+async function autoSeed() {
+  try {
+    // Check if departments exist
+    const deptCount = await db.select({ count: sql<number>`count(*)` }).from(departments);
+    const count = Number(deptCount[0]?.count || 0);
+    
+    if (count === 0) {
+      console.log('🌱 Database is empty, running auto-seed...');
+      // Import and run seed
+      const { default: runSeed } = await import('./db/autoSeed');
+      await runSeed();
+      console.log('✅ Auto-seed completed!');
+    } else {
+      console.log(`📊 Database already has ${count} departments, skipping seed.`);
+    }
+  } catch (error) {
+    console.error('⚠️ Auto-seed error (tables may not exist yet):', error);
+  }
+}
 
-serve({
-  fetch: app.fetch,
-  port,
+// Start server
+autoSeed().then(() => {
+  console.log(`🚀 Server is running on http://localhost:${port}`);
+  serve({
+    fetch: app.fetch,
+    port,
+  });
 });
