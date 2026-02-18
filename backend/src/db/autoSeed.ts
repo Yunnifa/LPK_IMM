@@ -143,10 +143,10 @@ export default async function autoSeed() {
 
   await db.insert(formFields).values({
     fieldKey: 'nomor_induk_kependudukan',
-    label: 'Nomor Induk Kependudukan',
+    label: 'Nomor Induk Kepegawaian',
     fieldType: 'text',
     groupName: 'Data Diri',
-    placeholder: 'Masukkan NIK (16 digit)',
+    placeholder: 'Masukkan NIK',
     sortOrder: 3,
     isRequired: true,
     isActive: true,

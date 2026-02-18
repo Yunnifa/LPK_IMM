@@ -617,24 +617,34 @@ function PermohonanKendaraan() {
             {/* Box 2: Search */}
             <div className="bg-white rounded-lg shadow-md mb-6 p-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Cari Tiket</h3>
-              <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex gap-2">
                 <input
                   type="text"
                   value={ticketSearch}
                   onChange={(e) => setTicketSearch(e.target.value.toUpperCase())}
-                  placeholder="Masukkan nomor tiket (contoh: GA-TR-XXXX)"
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Nomor tiket (contoh: GA-TR-XXXX)"
+                  className="flex-1 min-w-0 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   onKeyPress={(e) => e.key === 'Enter' && handleSearchTicket()}
                 />
                 <button
                   onClick={handleSearchTicket}
                   disabled={searchLoading}
-                  className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 disabled:bg-gray-400 shrink-0"
+                  className="p-3 sm:px-6 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 disabled:bg-gray-400 shrink-0"
+                  title="Cari Tiket"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                  {searchLoading ? 'Mencari...' : 'Cari'}
+                  {searchLoading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span className="hidden sm:inline">Mencari...</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                      <span className="hidden sm:inline">Cari</span>
+                    </>
+                  )}
                 </button>
               </div>
 
