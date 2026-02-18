@@ -230,20 +230,15 @@ function PermohonanKendaraan() {
   const renderFormField = (field: FormField) => {
     const value = formValues[field.fieldKey] || '';
     
-    // Special handling for ketentuan field - render as read-only list
+    // Special handling for ketentuan field - render as read-only list (no box wrapper, already inside group)
     if (field.fieldKey === 'ketentuan_peminjaman_kendaraan') {
       return (
-        <div key={field.id} className="bg-white rounded-lg shadow-md mb-6">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-800">{field.label}</h2>
-          </div>
-          <div className="p-6">
-            <ul className="list-disc list-inside space-y-2 text-gray-700 text-sm">
-              {field.options.map((opt) => (
-                <li key={opt.id}>{opt.label}</li>
-              ))}
-            </ul>
-          </div>
+        <div key={field.id}>
+          <ul className="list-disc list-inside space-y-2 text-gray-700 text-sm">
+            {field.options.map((opt) => (
+              <li key={opt.id}>{opt.label}</li>
+            ))}
+          </ul>
         </div>
       );
     }
@@ -401,19 +396,26 @@ function PermohonanKendaraan() {
     return acc;
   }, {} as Record<string, FormField[]>);
 
-  // Reorder groups: put Ketentuan right before Persetujuan
+  // Merge Ketentuan + Persetujuan into a single group called "Ketentuan & Persetujuan"
   const orderedGroupEntries = () => {
     const entries = Object.entries(groupedFields);
     const ketentuanIndex = entries.findIndex(([name]) => name === 'Ketentuan');
     const persetujuanIndex = entries.findIndex(([name]) => name === 'Persetujuan');
     
-    if (ketentuanIndex !== -1 && persetujuanIndex !== -1 && ketentuanIndex < persetujuanIndex - 1) {
-      // Remove ketentuan from current position
-      const [ketentuan] = entries.splice(ketentuanIndex, 1);
-      // Find new persetujuan index (shifted after splice)
-      const newPersetujuanIndex = entries.findIndex(([name]) => name === 'Persetujuan');
-      // Insert ketentuan right before persetujuan
-      entries.splice(newPersetujuanIndex, 0, ketentuan);
+    if (ketentuanIndex !== -1 && persetujuanIndex !== -1) {
+      // Merge both groups into one
+      const ketentuanFields = entries[ketentuanIndex][1];
+      const persetujuanFields = entries[persetujuanIndex][1];
+      const mergedFields = [...ketentuanFields, ...persetujuanFields];
+      
+      // Remove both original entries (remove higher index first to avoid shift issues)
+      const higherIdx = Math.max(ketentuanIndex, persetujuanIndex);
+      const lowerIdx = Math.min(ketentuanIndex, persetujuanIndex);
+      entries.splice(higherIdx, 1);
+      entries.splice(lowerIdx, 1);
+      
+      // Add merged group at the end
+      entries.push(['Ketentuan & Persetujuan', mergedFields]);
     }
     return entries;
   };
@@ -615,7 +617,7 @@ function PermohonanKendaraan() {
             {/* Box 2: Search */}
             <div className="bg-white rounded-lg shadow-md mb-6 p-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Cari Tiket</h3>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="text"
                   value={ticketSearch}
@@ -627,7 +629,7 @@ function PermohonanKendaraan() {
                 <button
                   onClick={handleSearchTicket}
                   disabled={searchLoading}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:bg-gray-400"
+                  className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 disabled:bg-gray-400 shrink-0"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
