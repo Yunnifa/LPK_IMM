@@ -18,8 +18,10 @@ export const users = pgTable('users', {
   email: varchar('email', { length: 100 }),
   phone: varchar('phone', { length: 20 }),
   birthdate: date('birthdate'),
-  role: varchar('role', { length: 20 }).notNull().default('user'), // admin, staff, user
+  role: varchar('role', { length: 20 }).notNull().default('user'), // superadmin, head_departemen, ga_transport, general_affair, general_service
   departmentId: integer('department_id').references(() => departments.id),
+  telegramChatId: varchar('telegram_chat_id', { length: 50 }), // Telegram chat ID for notifications
+  isActive: boolean('is_active').notNull().default(true),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });

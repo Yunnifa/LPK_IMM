@@ -3,7 +3,7 @@ import { db } from '../db';
 import { vehicleRequests, departments, users } from '../db/schema';
 import { eq, desc, count } from 'drizzle-orm';
 import { authMiddleware, adminOnly } from '../middleware/auth';
-import { sendTicketNotification } from './telegram';
+import { sendTicketNotification, sendApprovalNotification } from './telegram';
 import { HonoEnv } from '../types';
 
 const vehicleRequestsRoute = new Hono<HonoEnv>();
@@ -185,9 +185,9 @@ vehicleRequestsRoute.post('/', async (c) => {
       })
       .returning();
 
-    // Send Telegram notification if user is subscribed
+    // Send Telegram notification to Head Dept + Superadmins
     try {
-      await sendTicketNotification(requestData.nik, ticketNumber, requestData.name);
+      await sendTicketNotification(requestData.nik, ticketNumber, requestData.name, requestData.departmentId);
     } catch (telegramError) {
       console.error('Error sending Telegram notification:', telegramError);
       // Don't fail the request if Telegram notification fails
@@ -324,6 +324,20 @@ vehicleRequestsRoute.patch('/:id/approval', authMiddleware, async (c) => {
       .set(updateData)
       .where(eq(vehicleRequests.id, id))
       .returning();
+
+    // Send Telegram notification to user about approval update
+    try {
+      if (updatedRequest.ticketNumber) {
+        await sendApprovalNotification(
+          updatedRequest.ticketNumber,
+          level,
+          status,
+          notes || undefined
+        );
+      }
+    } catch (notifError) {
+      console.error('Error sending approval notification:', notifError);
+    }
 
     return c.json(updatedRequest);
   } catch (error) {
