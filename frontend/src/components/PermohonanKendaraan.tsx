@@ -118,7 +118,7 @@ function PermohonanKendaraan() {
 
     // Validate required fields from formFields
     const missingFields = formFields
-      .filter(f => f.isRequired && f.fieldKey !== 'ketentuan_peminjaman_kendaraan') // Skip ketentuan (read-only)
+      .filter(f => f.isRequired && f.fieldKey !== 'ketentuan_peminjaman_kendaraan' && f.fieldKey !== 'ketentuan') // Skip ketentuan (read-only)
       .filter(f => !formValues[f.fieldKey]?.trim());
     
     if (missingFields.length > 0) {
@@ -231,7 +231,7 @@ function PermohonanKendaraan() {
     const value = formValues[field.fieldKey] || '';
     
     // Special handling for ketentuan field - render as read-only list (no box wrapper, already inside group)
-    if (field.fieldKey === 'ketentuan_peminjaman_kendaraan') {
+    if (field.fieldKey === 'ketentuan_peminjaman_kendaraan' || field.fieldKey === 'ketentuan') {
       return (
         <div key={field.id}>
           <ul className="list-disc list-inside space-y-2 text-gray-700 text-sm">
